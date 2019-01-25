@@ -10,7 +10,7 @@ ONE_MINUTE = 6
 try:
   while True:
     print('waiting')
-    channel = GPIO.wait_for_edge(17, GPIO.RISING, timeout=    TEN_MINUTES)
+    channel = GPIO.wait_for_edge(17, GPIO.RISING, timeout=TEN_MINUTES)
     if channel is None:
       print('been quite for 10 min')
       call(["/usr/bin/vcgencmd", "display_power", "0"])
@@ -21,5 +21,5 @@ try:
       sleep(ONE_MINUTE)
       print('stopped_sleeping')
 
-finally:▫
-  GPIO.cleanup()▫
+finally:
+  GPIO.cleanup()
