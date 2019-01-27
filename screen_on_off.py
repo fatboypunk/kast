@@ -28,11 +28,5 @@ def main():
     shutdown('', '')
 
 with daemon.DaemonContext(
-  pidfile=lockfile.FileLock('/tmp/screen_on_off.pid'),
-  signal_map={
-    signal.SIGINT: shutdown,
-    signal.SIGKILL: shutdown,
-    signal.SIGTERM: shutdown,
-    signal.SIGTSTP: shutdown
-  }):
+        pidfile=lockfile.FileLock('/tmp/screen_on_off.pid')):
   main()
