@@ -12,30 +12,30 @@ logging.basicConfig(format='%(asctime)s %(message)s', filename='log.log',level=l
 TEN_MINUTES = 600000
 ONE_MINUTE = 60
 
-def shutdown(signum, frame):  # signum and frame are mandatory
+def shutdown(signum, frame):
   logging.info('Shutting down, bye bye')
   GPIO.cleanup()
   sys.exit(0)
 
-def main():
-  try:
-    while True:
-      channel = GPIO.wait_for_edge(27, GPIO.RISING, timeout=TEN_MINUTES)
-      if channel is None:
-        logging.info('Not heard anything for 10 minutes, power down')
-        call(["/usr/bin/vcgencmd", "display_power", "0"])
-      else:
-        logging.info('Heard something, power on')
-        call(["/usr/bin/vcgencmd", "display_power", "1"])
-        logging.info('Sleeping')
-        sleep(ONE_MINUTE)
-        logging.info('Sleeping is over')
+# def main():
+try:
+  while True:
+    channel = GPIO.wait_for_edge(27, GPIO.RISING, timeout=TEN_MINUTES)
+    if channel is None:
+      logging.info('Not heard anything for 10 minutes, power down')
+      call(["/usr/bin/vcgencmd", "display_power", "0"])
+    else:
+      logging.info('Heard something, power on')
+      call(["/usr/bin/vcgencmd", "display_power", "1"])
+      logging.info('Sleeping')
+      sleep(ONE_MINUTE)
+      logging.info('Sleeping is over')
 
-  finally:
-    shutdown('', '')
+finally:
+  shutdown('', '')
 
-with daemon.DaemonContext(
-        pidfile=lockfile.FileLock('/tmp/screen_on_off.pid'),
-        working_directory='/home/pi/kast'):
-  logging.info('Starting as a daemon')
-  main()
+# with daemon.DaemonContext(
+#         pidfile=lockfile.FileLock('/var/run/screen_on_off.pid'),
+#         working_directory='/home/pi/kast'):
+#   logging.info('Starting as a daemon')
+#   main()
