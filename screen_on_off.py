@@ -9,6 +9,7 @@ import signal
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(27, GPIO.IN)
 logging.basicConfig(format='%(asctime)s %(message)s', filename='log.log',level=logging.INFO)
+fh = logging.FileHandler("log.log")
 TEN_MINUTES = 600000
 ONE_MINUTE = 60
 
@@ -20,6 +21,7 @@ def shutdown(signum, frame):
 # def main():
 try:
   while True:
+    logging.info('Starting')
     channel = GPIO.wait_for_edge(27, GPIO.RISING, timeout=TEN_MINUTES)
     if channel is None:
       logging.info('Not heard anything for 10 minutes, power down')
@@ -34,8 +36,9 @@ try:
 finally:
   shutdown('', '')
 
-# with daemon.DaemonContext(
-#         pidfile=lockfile.FileLock('/var/run/screen_on_off.pid'),
-#         working_directory='/home/pi/kast'):
-#   logging.info('Starting as a daemon')
-#   main()
+with daemon.DaemonContext(
+        pidfile=lockfile.FileLock('/var/run/screen_on_off.pid'),
+        files_preserve = [ fh.stream ],
+        working_directory='/home/pi/kast'):
+  logging.info('Starting as a daemon')
+  main()
